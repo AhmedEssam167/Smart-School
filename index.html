@@ -178,7 +178,7 @@
         .close-main-modal { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 2rem; color: #fff; z-index: 10; transition: 0.3s;}
         .close-main-modal:hover { color: red; }
 
-        /* --- نافذة بطاقة المشروع (تظهر أعلى الشاشة) --- */
+        /* --- نافذة بطاقة المشروع (تم إضافة خصائص التجاوب والتمرير هنا) --- */
         .top-modal {
             display: none;
             position: fixed;
@@ -188,6 +188,8 @@
             z-index: 4000;
             width: 90%;
             max-width: 750px;
+            max-height: 90vh; /* لتحديد أقصى ارتفاع للنافذة */
+            overflow-y: auto; /* تفعيل التمرير العمودي عند الحاجة */
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(25px);
             border: 1px solid var(--primary);
@@ -197,6 +199,30 @@
             text-align: right;
             border-bottom: 5px solid var(--primary);
         }
+        
+        /* تعديلات مخصصة لشاشات الهواتف لبطاقة المشروع */
+        @media (max-width: 768px) {
+            .top-modal {
+                padding: 20px 15px;
+                top: 10px;
+                max-height: 95vh;
+            }
+            .top-modal h2 {
+                font-size: 1.3rem;
+                margin-top: 15px;
+            }
+            .project-details-list li {
+                font-size: 0.95rem; /* تصغير الخط قليلاً ليناسب الشاشة */
+                padding: 10px;
+            }
+            .manager-badge {
+                font-size: 0.95rem;
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+
         .top-modal h2 {
             color: var(--primary);
             border-bottom: 1px solid rgba(255,255,255,0.1);
@@ -240,10 +266,6 @@
             font-size: 1.1rem;
         }
         .student-name { color: var(--primary); font-weight: bold; }
-
-        @media (max-width: 600px) {
-            .manager-badge { flex-direction: column; text-align: center; }
-        }
 
         /* Main Image Viewport */
         .main-image-viewport { 
