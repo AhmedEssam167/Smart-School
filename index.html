@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart School Simulator | مدرسة العصافرة الذكية</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Cairo:wght@300;600;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #00f2ff;
+            --secondary: #7000ff;
+            --bg-dark: #050505;
+            --glass: rgba(255, 255, 255, 0.05);
+            --neon-shadow: 0 0 15px rgba(0, 242, 255, 0.5);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', 'Orbitron', sans-serif; }
+        body { background-color: var(--bg-dark); color: white; overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* Background & Loader */
+        #School-canvas { position: fixed; top: 0; left: 0; z-index: -1; }
+        #loader {
+            position: fixed; width: 100%; height: 100%; background: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .scanner { width: 250px; height: 3px; background: var(--primary); box-shadow: var(--neon-shadow); animation: scan 2s infinite; }
+        @keyframes scan { 0% { transform: translateY(-60px); } 100% { transform: translateY(60px); } }
+
+        /* Navigation */
+        .glass-nav {
+            display: flex; justify-content: space-between; align-items: center; padding: 20px 50px;
+            background: var(--glass); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: fixed; width: 100%; z-index: 100;
+        }
+        .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; }
+        .logo span { color: var(--primary); text-shadow: var(--neon-shadow); }
+
+        /* Hero Section */
+        .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 40px; }
+        .neon-text { font-size: clamp(2.5rem, 8vw, 5rem); text-shadow: 0 0 20px var(--primary); margin-bottom: 10px; }
+        
+        /* Main Interface Image Styling */
+        .hero-image-wrapper {
+            margin-top: 40px;
+            width: 100%;
+            max-width: 800px;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid var(--primary);
+            box-shadow: var(--neon-shadow);
+            position: relative;
+            background: var(--glass);
+            padding: 5px;
+        }
+        .hero-image-wrapper img {
+            width: 100%;
+            display: block;
+            border-radius: 15px;
+            transition: transform 0.5s ease;
+        }
+        .hero-image-wrapper:hover img {
+            transform: scale(1.03);
+        }
+        
+        /* Dashboard & Cards */
+        .dashboard { padding: 80px 50px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .glass-card { 
+            background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px; padding: 30px; transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .glass-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: var(--neon-shadow); }
+
+        /* Interactive Map */
+        .map-wrapper { 
+            height: 450px; background: rgba(0,0,0,0.5); border: 1px dashed var(--primary); 
+            border-radius: 30px; position: relative; display: flex; justify-content: center; align-items: center;
+        }
+        
+        /* الزر الرئيسي المكبر لأكاديمية المستقبل */
+        #main-academy-node {
+            width: 150px; 
+            height: 150px; 
+            background: var(--glass); 
+            border: 3px solid var(--primary);
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            font-size: 4rem; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            color: var(--primary);
+            animation: pulse-glow 2s infinite;
+        }
+        #main-academy-node:hover { 
+            background: var(--primary); 
+            color: #000; 
+            transform: scale(1.1); 
+            animation: none;
+            box-shadow: 0 0 50px var(--primary);
+        }
+
+        /* أنيميشن النبض لجذب الانتباه */
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 15px var(--primary); transform: scale(1); }
+            50% { box-shadow: 0 0 40px var(--primary); transform: scale(1.05); }
+            100% { box-shadow: 0 0 15px var(--primary); transform: scale(1); }
+        }
+
+        /* --- Academy Modal --- */
+        .modal { 
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            z-index: 3000; width: 95%; max-width: 1000px; background: rgba(0,0,0,0.95);
+            border: 1px solid var(--primary); border-radius: 20px; padding: 20px;
+        }
+        .close-main-modal { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 2rem; color: #fff; z-index: 10; }
+
+        /* Main Image Viewport */
+        .main-image-viewport { 
+            position: relative; width: 100%; height: 500px; 
+            border-radius: 15px; overflow: hidden; background: #000;
+            display: flex; justify-content: center; align-items: center;
+            margin-bottom: 20px;
+        }
+        #displayImg { max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.4s ease; }
+        
+        /* Close Zoom Button */
+        #closeZoom {
+            position: absolute; top: 20px; right: 20px; background: red; color: white;
+            border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;
+            display: none; font-weight: bold; z-index: 100;
+        }
+
+        .img-caption { position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.8); padding: 15px; color: var(--primary); text-align: center; }
+
+        /* Thumbnail Grid */
+        .thumbnail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .thumb-box { 
+            cursor: pointer; border-radius: 10px; overflow: hidden; 
+            border: 2px solid transparent; transition: 0.3s; height: 100px;
+        }
+        .thumb-box:hover { border-color: var(--primary); }
+        .thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
+        .thumb-box:hover img { opacity: 1; transform: none; } 
+
+        /* Info Modal */
+        #info-modal { width: 90%; max-width: 500px; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="scanner"></div>
+        <p style="margin-top: 20px; letter-spacing: 5px;">SYSTEM LOADING...</p>
+    </div>
+
+    <canvas id="School-canvas"></canvas>
+
+    <nav class="glass-nav">
+        <div class="logo">SMART<span>School</span></div>
+        <div class="nav-links">
+            <span id="live-time" style="font-family: Orbitron; color: var(--primary);">12:00:00</span>
+        </div>
+        <div class="user-id">إدارة المطرية التعليمية</div>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1 class="neon-text">Smart School Simulator</h1>
+                <h3>بوابة إدارة مدرسة العصافرة الإعدادية بنين الذكية</h3>
+                <p style="opacity: 0.7; margin-top: 15px;">نظام محاكاة تفاعلي لإدارة المرافق والبيئة التعليمية</p>
+                
+                <div class="hero-image-wrapper">
+                    <img src="school6.png" alt="الواجهة الرئيسية لمدرسة العصافرة">
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard">
+            <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5rem;">مركز البيانات الحية</h2>
+            <div class="grid-container">
+                <div class="glass-card">
+                    <h3>تحليل الطاقة بالمدرسة</h3>
+                    <canvas id="energyChart"></canvas>
+                </div>
+                <div class="glass-card" style="text-align: center;">
+                    <h3>الحضور الذكي AI</h3>
+                    <h1 id="attendance-count" style="color: var(--primary); font-size: 3.5rem; margin: 15px 0;">95%</h1>
+                    <p>نسبة حضور الطلاب الآن</p>
+                </div>
+                <div class="glass-card">
+                    <h3>جودة البيئة التعليمية</h3>
+                    <div style="height: 15px; background: #222; border-radius: 10px; margin-top: 20px;">
+                        <div id="env-bar" style="width: 92%; height: 100%; background: var(--primary); box-shadow: var(--neon-shadow);"></div>
+                    </div>
+                    <p style="margin-top: 10px;">نسبة النقاء: 92%</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="dashboard">
+            <h2 style="text-align: center; margin-bottom: 40px;">خريطة المنشأة التعليمية</h2>
+            <div class="map-wrapper">
+                <div id="main-academy-node" onclick="openAcademy()" title="أكاديمية المستقبل">
+                    <i class="fas fa-university"></i>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="info-modal" class="modal glass-card">
+        <span class="close-main-modal" onclick="closeInfoModal()">&times;</span>
+        <h2 id="m-title" style="color: var(--primary);"></h2>
+        <p id="m-desc" style="margin: 20px 0; line-height: 1.6;"></p>
+        <p>كفاءة النظام: <span id="m-eff" style="color: var(--primary);"></span></p>
+    </div>
+
+    <div id="academyModal" class="modal">
+        <span class="close-main-modal" onclick="closeAcademy()">&times;</span>
+        <h2 style="text-align: center; color: var(--primary); margin-bottom: 20px;">مركز المحاكاة | مدرسة العصافرة</h2>
+        
+        <div class="main-image-viewport">
+            <button id="closeZoom" onclick="resetToSchool()">X</button>
+            <img id="displayImg" src="school6.png" alt="Main View">
+            <div id="caption" class="img-caption">الواجهة الرئيسية للمدرسة</div>
+        </div>
+
+        <div class="thumbnail-grid">
+            <div class="thumb-box" onclick="zoomImage('school2.png', 'الفصل التفاعلي الذكي')">
+                <img src="school2.png">
+            </div>
+            <div class="thumb-box" onclick="zoomImage('school3.png', 'التعلم بالتعاون .. ابتكار بلا حدود')">
+                <img src="school3.png">
+            </div>
+            <div class="thumb-box" onclick="zoomImage('school4.png', 'مختبر الواقع الافتراضي VR')">
+                <img src="school4.png">
+            </div>
+            <div class="thumb-box" onclick="zoomImage('school5.png', 'مختبر الابتكار والروبوتات')">
+                <img src="school5.png">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Three.js Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#School-canvas'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        const grid = new THREE.GridHelper(200, 40, 0x00f2ff, 0x111111);
+        scene.add(grid);
+        camera.position.set(0, 10, 20);
+        function animate() { requestAnimationFrame(animate); scene.rotation.y += 0.0005; renderer.render(scene, camera); }
+        animate();
+
+        // Chart.js
+        const ctx = document.getElementById('energyChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['1AM', '5AM', '9AM', '1PM', '5PM', '9PM'],
+                datasets: [{
+                    data: [30, 25, 75, 99, 80, 40],
+                    borderColor: '#00f2ff',
+                    backgroundColor: 'rgba(0, 242, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#888' } } } }
+        });
+
+        // Clock & Loader
+        setInterval(() => { document.getElementById('live-time').innerText = new Date().toLocaleTimeString(); }, 1000);
+        window.onload = () => { setTimeout(() => { gsap.to("#loader", { opacity: 0, duration: 1, onComplete: () => document.getElementById('loader').remove() }); }, 1500); };
+
+        // Academy Logic 
+        const mainImg = document.getElementById('displayImg');
+        const caption = document.getElementById('caption');
+        const closeBtn = document.getElementById('closeZoom');
+
+        function openAcademy() { document.getElementById('academyModal').style.display = 'block'; gsap.from("#academyModal", { opacity: 0, scale: 0.9, duration: 0.5 }); }
+        function closeAcademy() { document.getElementById('academyModal').style.display = 'none'; resetToSchool(); }
+
+        function zoomImage(src, text) {
+            gsap.to(mainImg, { opacity: 0, duration: 0.2, onComplete: () => {
+                mainImg.src = src; caption.innerText = text; closeBtn.style.display = 'block';
+                gsap.to(mainImg, { opacity: 1, duration: 0.4 });
+            }});
+        }
+
+        function resetToSchool() {
+            gsap.to(mainImg, { opacity: 0, duration: 0.2, onComplete: () => {
+                mainImg.src = 'school6.png'; caption.innerText = 'الواجهة الرئيسية للمدرسة'; closeBtn.style.display = 'none';
+                gsap.to(mainImg, { opacity: 1, duration: 0.4 });
+            }});
+        }
+
+        // Info Modal Logic
+        function openInfoModal(t, d, e) {
+            document.getElementById('m-title').innerText = t; document.getElementById('m-desc').innerText = d;
+            document.getElementById('m-eff').innerText = e; document.getElementById('info-modal').style.display = 'block';
+        }
+        function closeInfoModal() { document.getElementById('info-modal').style.display = 'none'; }
+    </script>
+</body>
+</html>
