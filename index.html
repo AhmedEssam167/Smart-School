@@ -38,11 +38,42 @@
         }
         .logo { font-size: 1.8rem; font-weight: 900; letter-spacing: 2px; }
         .logo span { color: var(--primary); text-shadow: var(--neon-shadow); }
+        
+        @media (max-width: 768px) {
+            .glass-nav {
+                flex-direction: column;
+                padding: 10px 20px;
+                gap: 10px;
+            }
+        }
 
         /* Hero Section */
-        .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 20px 40px; }
+        .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 140px 20px 40px; }
         .neon-text { font-size: clamp(2.5rem, 8vw, 5rem); text-shadow: 0 0 20px var(--primary); margin-bottom: 10px; }
         
+        /* زر بطاقة المشروع */
+        .btn-neon {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 20px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-neon:hover {
+            background: var(--primary);
+            color: #000;
+            box-shadow: var(--neon-shadow);
+            transform: translateY(-3px);
+        }
+
         /* Main Interface Image Styling */
         .hero-image-wrapper {
             margin-top: 40px;
@@ -68,12 +99,31 @@
         
         /* Dashboard & Cards */
         .dashboard { padding: 80px 50px; }
-        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        @media (max-width: 768px) {
+             .dashboard { padding: 40px 20px; }
+        }
+        
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 30px; 
+            align-items: stretch; 
+        }
+        
         .glass-card { 
             background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px; padding: 30px; transition: var(--transition); position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;
+            min-height: 250px; 
         }
         .glass-card:hover { border-color: var(--primary); transform: translateY(-10px); box-shadow: var(--neon-shadow); }
+
+        .chart-container {
+            position: relative;
+            height: 150px;
+            width: 100%;
+            margin-top: 15px;
+        }
 
         /* Interactive Map */
         .map-wrapper { 
@@ -81,7 +131,6 @@
             border-radius: 30px; position: relative; display: flex; justify-content: center; align-items: center;
         }
         
-        /* الزر الرئيسي المكبر لأكاديمية المستقبل */
         #main-academy-node {
             width: 150px; 
             height: 150px; 
@@ -104,21 +153,97 @@
             animation: none;
             box-shadow: 0 0 50px var(--primary);
         }
+        
+        @media (max-width: 768px) {
+             #main-academy-node {
+                width: 100px;
+                height: 100px;
+                font-size: 2.5rem;
+             }
+        }
 
-        /* أنيميشن النبض لجذب الانتباه */
         @keyframes pulse-glow {
             0% { box-shadow: 0 0 15px var(--primary); transform: scale(1); }
             50% { box-shadow: 0 0 40px var(--primary); transform: scale(1.05); }
             100% { box-shadow: 0 0 15px var(--primary); transform: scale(1); }
         }
 
-        /* --- Academy Modal --- */
+        /* --- Modals --- */
         .modal { 
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             z-index: 3000; width: 95%; max-width: 1000px; background: rgba(0,0,0,0.95);
             border: 1px solid var(--primary); border-radius: 20px; padding: 20px;
+            max-height: 90vh; overflow-y: auto;
         }
-        .close-main-modal { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 2rem; color: #fff; z-index: 10; }
+        .close-main-modal { position: absolute; top: 15px; left: 15px; cursor: pointer; font-size: 2rem; color: #fff; z-index: 10; transition: 0.3s;}
+        .close-main-modal:hover { color: red; }
+
+        /* --- نافذة بطاقة المشروع (تظهر أعلى الشاشة) --- */
+        .top-modal {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4000;
+            width: 90%;
+            max-width: 750px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--primary);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+            text-align: right;
+            border-bottom: 5px solid var(--primary);
+        }
+        .top-modal h2 {
+            color: var(--primary);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .project-details-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .project-details-list li {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #ddd;
+            background: rgba(255,255,255,0.03);
+            padding: 10px 15px;
+            border-radius: 10px;
+            border-right: 3px solid var(--primary);
+        }
+        .project-details-list li i {
+            color: var(--primary);
+            margin-left: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        .manager-badge {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            background: rgba(0, 242, 255, 0.05);
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 1px dashed var(--primary);
+            font-size: 1.1rem;
+        }
+        .student-name { color: var(--primary); font-weight: bold; }
+
+        @media (max-width: 600px) {
+            .manager-badge { flex-direction: column; text-align: center; }
+        }
 
         /* Main Image Viewport */
         .main-image-viewport { 
@@ -127,9 +252,13 @@
             display: flex; justify-content: center; align-items: center;
             margin-bottom: 20px;
         }
+        
+        @media (max-width: 768px) {
+            .main-image-viewport { height: 300px; }
+        }
+        
         #displayImg { max-width: 100%; max-height: 100%; object-fit: contain; transition: opacity 0.4s ease; }
         
-        /* Close Zoom Button */
         #closeZoom {
             position: absolute; top: 20px; right: 20px; background: red; color: white;
             border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;
@@ -140,6 +269,11 @@
 
         /* Thumbnail Grid */
         .thumbnail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        
+        @media (max-width: 768px) {
+            .thumbnail-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
         .thumb-box { 
             cursor: pointer; border-radius: 10px; overflow: hidden; 
             border: 2px solid transparent; transition: 0.3s; height: 100px;
@@ -148,8 +282,6 @@
         .thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.3s; }
         .thumb-box:hover img { opacity: 1; transform: none; } 
 
-        /* Info Modal */
-        #info-modal { width: 90%; max-width: 500px; }
     </style>
 </head>
 <body>
@@ -176,6 +308,10 @@
                 <h3>بوابة إدارة مدرسة العصافرة الإعدادية بنين الذكية</h3>
                 <p style="opacity: 0.7; margin-top: 15px;">نظام محاكاة تفاعلي لإدارة المرافق والبيئة التعليمية</p>
                 
+                <button class="btn-neon" onclick="openProjectCard()">
+                    <i class="fas fa-id-card"></i> بطاقة وصف المشروع
+                </button>
+                
                 <div class="hero-image-wrapper">
                     <img src="school6.png" alt="الواجهة الرئيسية لمدرسة العصافرة">
                 </div>
@@ -183,29 +319,33 @@
         </section>
 
         <section class="dashboard">
-            <h2 style="text-align: center; margin-bottom: 40px; font-size: 2.5rem;">مركز البيانات الحية</h2>
+            <h2 style="text-align: center; margin-bottom: 40px; font-size: clamp(1.5rem, 5vw, 2.5rem);">مركز البيانات الحية</h2>
             <div class="grid-container">
                 <div class="glass-card">
-                    <h3>تحليل الطاقة بالمدرسة</h3>
-                    <canvas id="energyChart"></canvas>
-                </div>
-                <div class="glass-card" style="text-align: center;">
-                    <h3>الحضور الذكي AI</h3>
-                    <h1 id="attendance-count" style="color: var(--primary); font-size: 3.5rem; margin: 15px 0;">95%</h1>
-                    <p>نسبة حضور الطلاب الآن</p>
+                    <h3 style="width: 100%;">تحليل الطاقة بالمدرسة</h3>
+                    <div class="chart-container">
+                        <canvas id="energyChart"></canvas>
+                    </div>
                 </div>
                 <div class="glass-card">
-                    <h3>جودة البيئة التعليمية</h3>
-                    <div style="height: 15px; background: #222; border-radius: 10px; margin-top: 20px;">
-                        <div id="env-bar" style="width: 92%; height: 100%; background: var(--primary); box-shadow: var(--neon-shadow);"></div>
+                    <h3 style="width: 100%;">الحضور الذكي AI</h3>
+                    <h1 id="attendance-count" style="color: var(--primary); font-size: 3.5rem; margin: 15px 0;">95%</h1>
+                    <p style="width: 100%;">نسبة حضور الطلاب الآن</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="width: 100%;">جودة البيئة التعليمية</h3>
+                    <div style="width: 100%; margin-top: 20px;">
+                        <div style="height: 15px; background: #222; border-radius: 10px; margin-bottom: 15px;">
+                            <div id="env-bar" style="width: 92%; height: 100%; background: var(--primary); box-shadow: var(--neon-shadow); border-radius: 10px;"></div>
+                        </div>
+                        <p>نسبة النقاء: 92%</p>
                     </div>
-                    <p style="margin-top: 10px;">نسبة النقاء: 92%</p>
                 </div>
             </div>
         </section>
 
         <section class="dashboard">
-            <h2 style="text-align: center; margin-bottom: 40px;">خريطة المنشأة التعليمية</h2>
+            <h2 style="text-align: center; margin-bottom: 40px; font-size: clamp(1.5rem, 5vw, 2.5rem);">خريطة المنشأة التعليمية</h2>
             <div class="map-wrapper">
                 <div id="main-academy-node" onclick="openAcademy()" title="أكاديمية المستقبل">
                     <i class="fas fa-university"></i>
@@ -214,11 +354,22 @@
         </section>
     </main>
 
-    <div id="info-modal" class="modal glass-card">
-        <span class="close-main-modal" onclick="closeInfoModal()">&times;</span>
-        <h2 id="m-title" style="color: var(--primary);"></h2>
-        <p id="m-desc" style="margin: 20px 0; line-height: 1.6;"></p>
-        <p>كفاءة النظام: <span id="m-eff" style="color: var(--primary);"></span></p>
+    <div id="projectCardModal" class="top-modal">
+        <span class="close-main-modal" onclick="closeProjectCard()">&times;</span>
+        <h2><i class="fas fa-id-card"></i> بطاقة وصف المشروع</h2>
+        
+        <ul class="project-details-list">
+            <li><strong><i class="fas fa-project-diagram"></i> اسم المشروع:</strong> محاكاة مدرسة العصافرة الذكية (تحت شعار الابداع طموح مصر المستقبل)</li>
+            <li><strong><i class="fas fa-graduation-cap"></i> المرحلة الدراسية:</strong> المرحلة الإعدادية</li>
+            <li><strong><i class="fas fa-code"></i> لغات البرمجة والتقنيات:</strong> تم التنفيذ باستخدام HTML5, CSS3, JavaScript (ومكتبات رسومية مثل Three.js لثلاثي الأبعاد، GSAP للحركات، و Chart.js للبيانات).</li>
+            <li><strong><i class="fas fa-laptop-code"></i> الاحتياجات الخاصة للتشغيل:</strong> متصفح ويب حديث (مثل Google Chrome أو Edge) يدعم تقنية WebGL لعرض الرسوميات، مع اتصال بشبكة الإنترنت.</li>
+            <li><strong><i class="fas fa-info-circle"></i> وصف المشروع:</strong> موقع ويب تفاعلي يحاكي بيئة تعليمية ذكية ومستقبلية، يدمج بين لوحات التحكم الحية للموارد (الطاقة، الحضور، البيئة) وخريطة تفاعلية للمنشأة التعليمية لعرض المختبرات والفصول الحديثة.</li>
+        </ul>
+
+        <div class="manager-badge">
+            <div><i class="fas fa-laptop-medical"></i> تصميم الموقع: <span class="student-name">الطالب / أحمد عصام فؤاد</span></div>
+            <div><i class="fas fa-chalkboard-teacher"></i> إشراف: <span>أ / مباركة محمد سالم</span></div>
+        </div>
     </div>
 
     <div id="academyModal" class="modal">
@@ -262,6 +413,12 @@
         camera.position.set(0, 10, 20);
         function animate() { requestAnimationFrame(animate); scene.rotation.y += 0.0005; renderer.render(scene, camera); }
         animate();
+        
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
 
         // Chart.js
         const ctx = document.getElementById('energyChart').getContext('2d');
@@ -277,12 +434,31 @@
                     tension: 0.4
                 }]
             },
-            options: { plugins: { legend: { display: false } }, scales: { y: { display: false }, x: { ticks: { color: '#888' } } } }
+            options: { 
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } }, 
+                scales: { y: { display: false }, x: { ticks: { color: '#888' } } } 
+            }
         });
 
         // Clock & Loader
         setInterval(() => { document.getElementById('live-time').innerText = new Date().toLocaleTimeString(); }, 1000);
         window.onload = () => { setTimeout(() => { gsap.to("#loader", { opacity: 0, duration: 1, onComplete: () => document.getElementById('loader').remove() }); }, 1500); };
+
+        // --- منطق بطاقة المشروع ---
+        function openProjectCard() {
+            const modal = document.getElementById('projectCardModal');
+            modal.style.display = 'block';
+            gsap.fromTo(modal, { y: -100, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" });
+        }
+
+        function closeProjectCard() {
+            const modal = document.getElementById('projectCardModal');
+            gsap.to(modal, { y: -50, opacity: 0, duration: 0.3, onComplete: () => {
+                modal.style.display = 'none';
+            }});
+        }
 
         // Academy Logic 
         const mainImg = document.getElementById('displayImg');
@@ -305,13 +481,6 @@
                 gsap.to(mainImg, { opacity: 1, duration: 0.4 });
             }});
         }
-
-        // Info Modal Logic
-        function openInfoModal(t, d, e) {
-            document.getElementById('m-title').innerText = t; document.getElementById('m-desc').innerText = d;
-            document.getElementById('m-eff').innerText = e; document.getElementById('info-modal').style.display = 'block';
-        }
-        function closeInfoModal() { document.getElementById('info-modal').style.display = 'none'; }
     </script>
 </body>
 </html>
